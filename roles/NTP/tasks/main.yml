@@ -1,0 +1,15 @@
+  - name: Install chrony
+    apt:
+      name: chrony
+      state: latest
+      update_cache: yes
+
+  - name: Start chrony
+    systemd:
+      name: chrony
+      state: started
+
+  - name: Enable chrony
+    systemd:
+      name: chrony
+      enabled: yes

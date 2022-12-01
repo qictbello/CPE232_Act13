@@ -1,0 +1,29 @@
+  - name: Install SQL
+    apt:
+      name:
+        - mariadb-server
+        - python3-pymysql
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Edit the mariadb file
+    copy:
+      content: |
+        default-storage-engine = innodb
+        innodb_file_per_table = on
+        max_connections = 4096
+        collation-server = utf_general_ci
+        character-set-server = utf8
+      dest: /etc/mysql/mariadb.conf.d/99-openstack.cnf
+      mode: "0755"
+
+  - name: Enable mariadb
+    systemd:
+       name: mariadb
+       enabled: yes
+
+  - name: Restart mariadb
+    systemd:
+      name: mariadb
+      state: restarted
